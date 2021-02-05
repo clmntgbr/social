@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <base href="/">
+    <title>{% block title %}{% endblock %}</title>
+
+{#    <link rel="stylesheet" type="text/css" href="{{ asset('asset/semantic/semantic.min.css') }}"/>#}
+{#    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">#}
+
+    <script async defer src="https://kit.fontawesome.com/cd91c1afff.js"></script>
+
+    {{ encore_entry_link_tags('app') }}
+
+    {% block stylesheets %}
+    {% endblock %}
+</head>
+<body id="{{ app.request.attributes.get("_route") }}">
+
+{% for message in app.flashes('success') %}
+    <div class="ui positive small message base"><i class="close icon"></i><div class="header">{{ message|raw }}</div></div>
+{% endfor %}
+
+{% for message in app.flashes('error') %}
+    <div class="ui negative small message base"><i class="close icon"></i><div class="header">{{ message|raw }}</div></div>
+{% endfor %}
+
+<header id="header">
+</header>
+
+<section class="body">
+    {% block body %}
+    {% endblock %}
+</section>
+
+<footer id="footer">
+</footer>
+
+<script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.js"></script>
+<script type="application/javascript" src="{{ asset('asset/semantic/semantic.min.js') }}"></script>
+
+<script type="text/javascript">
+    if (window.location.hash && window.location.hash === '#_=_') {
+        window.location.hash = '';
+    }
+</script>
+
+{% block javascripts %}
+{% endblock %}
+
+</body>
+</html>

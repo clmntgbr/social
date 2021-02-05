@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+{% endblock %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block body %}
+
+    {% if error %}
+        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+
+    <div class="auth" id="auth">
+        <div class="form-container sign-up-container">
+            <form action="{{ path('authentication_register') }}" method="post">
+                <h1>Créer un compte</h1>
+                <div class="social-container">
+                    <a href="{{ path('authentication_facebook') }}" class="social"><i class="fab fa-facebook-f"></i></a>
+                    <a href="{{ path('authentication_google') }}" class="social"><i class="fab fa-google-plus-g"></i></a>
+                    <a href="{{ path('authentication_linkedin') }}" class="social"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+                <input type="email" name="credentials[email]" placeholder="Email" id="email" required autofocus/>
+                <input type="password" name="credentials[password]" id="password" placeholder="Mot de Passe" required>
+                <button>Inscription</button>
+            </form>
+        </div>
+        <div class="form-container sign-in-container">
+            <form method="post">
+                <h1>Se Connecter</h1>
+                <div class="social-container">
+                    <a href="{{ path('authentication_facebook') }}" class="social"><i class="fab fa-facebook-f"></i></a>
+                    <a href="{{ path('authentication_google') }}" class="social"><i class="fab fa-google-plus-g"></i></a>
+                    <a href="{{ path('authentication_linkedin') }}" class="social"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+                <input type="email" value="{{ last_username }}" name="email" placeholder="Email" id="inputEmail" required autofocus/>
+                <input type="password" name="password" id="inputPassword" placeholder="Mot de Passe" required>
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                <a href="{{ path('authentication_reset_password') }}">Mot de passe oublié ?</a>
+                <button type="submit">
+                    Connexion
+                </button>
+            </form>
+        </div>
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <h1>Bon retour!</h1>
+                    <p>Pour restez connecter avec nous, merci de renseigner vos identifiants.</p>
+                    <button class="ghost" id="signIn">Se Connecter</button>
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <h1>Bonjour !</h1>
+                    <p>Veuillez renseigner vos identifiants pour commencer votre parcours avec nous.</p>
+                    <button class="ghost" id="signUp">S'Inscrire</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script  type="application/javascript">
+        const signUpButton = document.getElementById('signUp');
+        const signInButton = document.getElementById('signIn');
+        const container = document.getElementById('auth');
+
+        signUpButton.addEventListener('click', () => {
+            container.classList.add("right-panel-active");
+        });
+
+        signInButton.addEventListener('click', () => {
+            container.classList.remove("right-panel-active");
+        });
+
+        {% if type is not null %}
+            $(document).ready(function () {
+                container.classList.add("right-panel-active");
+            })
+        {% endif %}
+
+    </script>
+{% endblock %}

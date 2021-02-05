@@ -1,0 +1,45 @@
+security:
+    encoders:
+        App\Entity\User\User:
+            algorithm: auto
+
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_USER
+        ROLE_SUPER_ADMIN: ROLE_ADMIN
+
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    providers:
+        # used to reload user from session & other features (e.g. switch_user)
+        app_user_provider:
+            entity:
+                class: App\Entity\User\User
+                property: email
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            anonymous: true
+            lazy: true
+            provider: app_user_provider
+            guard:
+                authenticators:
+                    - App\Security\Guard\AuthenticationLoginAuthenticator
+                    - App\Security\Guard\Social\AuthenticationGoogleAuthenticator
+                    - App\Security\Guard\Social\AuthenticationFacebookAuthenticator
+                    - App\Security\Guard\Social\AuthenticationLinkedinAuthenticator
+                entry_point: App\Security\Guard\AuthenticationLoginAuthenticator
+            logout:
+                path: authentication_logout
+                target: authentication_login
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800
+                path: /
+                always_remember_me: true
+
+    access_control:
+        - { path: ^/authentication, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/app, roles: ROLE_USER }
+        - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
